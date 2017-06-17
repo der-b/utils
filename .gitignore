@@ -1,0 +1,9 @@
+*.o
+*.log
+*.trs
+*.out
+Makefile
+.deps
+.dirstamp
+config.status
+
