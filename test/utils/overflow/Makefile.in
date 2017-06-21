@@ -92,8 +92,8 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-check_PROGRAMS = test_overflow$(EXEEXT)
-TESTS = test_overflow$(EXEEXT)
+check_PROGRAMS = test_overflow.out$(EXEEXT)
+TESTS = test_overflow.out$(EXEEXT)
 subdir = test/utils/overflow
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -106,11 +106,11 @@ CONFIG_HEADER = $(top_builddir)/include/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__dirstamp = $(am__leading_dot)dirstamp
-am_test_overflow_OBJECTS = test_overflow-test.$(OBJEXT) \
-	../../../src/utils/overflow/test_overflow-overflow.$(OBJEXT)
-test_overflow_OBJECTS = $(am_test_overflow_OBJECTS)
-test_overflow_LDADD = $(LDADD)
-test_overflow_LINK = $(CCLD) $(test_overflow_CFLAGS) $(CFLAGS) \
+am_test_overflow_out_OBJECTS = test_overflow_out-test.$(OBJEXT) \
+	../../../src/utils/overflow/test_overflow_out-overflow.$(OBJEXT)
+test_overflow_out_OBJECTS = $(am_test_overflow_out_OBJECTS)
+test_overflow_out_LDADD = $(LDADD)
+test_overflow_out_LINK = $(CCLD) $(test_overflow_out_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -144,8 +144,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(test_overflow_SOURCES)
-DIST_SOURCES = $(test_overflow_SOURCES)
+SOURCES = $(test_overflow_out_SOURCES)
+DIST_SOURCES = $(test_overflow_out_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -470,13 +470,13 @@ top_srcdir = @top_srcdir@
 #AM_LDFLAGS =
 AM_CFLAGS = -g -O0 -Wall
 noinst_HEADERS = test_header.h
-test_overflow_SOURCES = test.c test_header.h \
+test_overflow_out_SOURCES = test.c test_header.h \
 	../../../src/utils/overflow/overflow.c
 
 # disabling oveflow warning, since in this test we provoke a lot of 
 # integer over- and underflows intentionally. The caused warnings are
 # anoying.
-test_overflow_CFLAGS = -Wno-overflow
+test_overflow_out_CFLAGS = -Wno-overflow
 all: all-am
 
 .SUFFIXES:
@@ -519,13 +519,13 @@ clean-checkPROGRAMS:
 ../../../src/utils/overflow/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) ../../../src/utils/overflow/$(DEPDIR)
 	@: > ../../../src/utils/overflow/$(DEPDIR)/$(am__dirstamp)
-../../../src/utils/overflow/test_overflow-overflow.$(OBJEXT):  \
+../../../src/utils/overflow/test_overflow_out-overflow.$(OBJEXT):  \
 	../../../src/utils/overflow/$(am__dirstamp) \
 	../../../src/utils/overflow/$(DEPDIR)/$(am__dirstamp)
 
-test_overflow$(EXEEXT): $(test_overflow_OBJECTS) $(test_overflow_DEPENDENCIES) $(EXTRA_test_overflow_DEPENDENCIES) 
-	@rm -f test_overflow$(EXEEXT)
-	$(AM_V_CCLD)$(test_overflow_LINK) $(test_overflow_OBJECTS) $(test_overflow_LDADD) $(LIBS)
+test_overflow.out$(EXEEXT): $(test_overflow_out_OBJECTS) $(test_overflow_out_DEPENDENCIES) $(EXTRA_test_overflow_out_DEPENDENCIES) 
+	@rm -f test_overflow.out$(EXEEXT)
+	$(AM_V_CCLD)$(test_overflow_out_LINK) $(test_overflow_out_OBJECTS) $(test_overflow_out_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -534,8 +534,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@../../../src/utils/overflow/$(DEPDIR)/test_overflow-overflow.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_overflow-test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@../../../src/utils/overflow/$(DEPDIR)/test_overflow_out-overflow.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_overflow_out-test.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -553,33 +553,33 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
-test_overflow-test.o: test.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_overflow_CFLAGS) $(CFLAGS) -MT test_overflow-test.o -MD -MP -MF $(DEPDIR)/test_overflow-test.Tpo -c -o test_overflow-test.o `test -f 'test.c' || echo '$(srcdir)/'`test.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_overflow-test.Tpo $(DEPDIR)/test_overflow-test.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test.c' object='test_overflow-test.o' libtool=no @AMDEPBACKSLASH@
+test_overflow_out-test.o: test.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_overflow_out_CFLAGS) $(CFLAGS) -MT test_overflow_out-test.o -MD -MP -MF $(DEPDIR)/test_overflow_out-test.Tpo -c -o test_overflow_out-test.o `test -f 'test.c' || echo '$(srcdir)/'`test.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_overflow_out-test.Tpo $(DEPDIR)/test_overflow_out-test.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test.c' object='test_overflow_out-test.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_overflow_CFLAGS) $(CFLAGS) -c -o test_overflow-test.o `test -f 'test.c' || echo '$(srcdir)/'`test.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_overflow_out_CFLAGS) $(CFLAGS) -c -o test_overflow_out-test.o `test -f 'test.c' || echo '$(srcdir)/'`test.c
 
-test_overflow-test.obj: test.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_overflow_CFLAGS) $(CFLAGS) -MT test_overflow-test.obj -MD -MP -MF $(DEPDIR)/test_overflow-test.Tpo -c -o test_overflow-test.obj `if test -f 'test.c'; then $(CYGPATH_W) 'test.c'; else $(CYGPATH_W) '$(srcdir)/test.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_overflow-test.Tpo $(DEPDIR)/test_overflow-test.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test.c' object='test_overflow-test.obj' libtool=no @AMDEPBACKSLASH@
+test_overflow_out-test.obj: test.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_overflow_out_CFLAGS) $(CFLAGS) -MT test_overflow_out-test.obj -MD -MP -MF $(DEPDIR)/test_overflow_out-test.Tpo -c -o test_overflow_out-test.obj `if test -f 'test.c'; then $(CYGPATH_W) 'test.c'; else $(CYGPATH_W) '$(srcdir)/test.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_overflow_out-test.Tpo $(DEPDIR)/test_overflow_out-test.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test.c' object='test_overflow_out-test.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_overflow_CFLAGS) $(CFLAGS) -c -o test_overflow-test.obj `if test -f 'test.c'; then $(CYGPATH_W) 'test.c'; else $(CYGPATH_W) '$(srcdir)/test.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_overflow_out_CFLAGS) $(CFLAGS) -c -o test_overflow_out-test.obj `if test -f 'test.c'; then $(CYGPATH_W) 'test.c'; else $(CYGPATH_W) '$(srcdir)/test.c'; fi`
 
-../../../src/utils/overflow/test_overflow-overflow.o: ../../../src/utils/overflow/overflow.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_overflow_CFLAGS) $(CFLAGS) -MT ../../../src/utils/overflow/test_overflow-overflow.o -MD -MP -MF ../../../src/utils/overflow/$(DEPDIR)/test_overflow-overflow.Tpo -c -o ../../../src/utils/overflow/test_overflow-overflow.o `test -f '../../../src/utils/overflow/overflow.c' || echo '$(srcdir)/'`../../../src/utils/overflow/overflow.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../../../src/utils/overflow/$(DEPDIR)/test_overflow-overflow.Tpo ../../../src/utils/overflow/$(DEPDIR)/test_overflow-overflow.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../../../src/utils/overflow/overflow.c' object='../../../src/utils/overflow/test_overflow-overflow.o' libtool=no @AMDEPBACKSLASH@
+../../../src/utils/overflow/test_overflow_out-overflow.o: ../../../src/utils/overflow/overflow.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_overflow_out_CFLAGS) $(CFLAGS) -MT ../../../src/utils/overflow/test_overflow_out-overflow.o -MD -MP -MF ../../../src/utils/overflow/$(DEPDIR)/test_overflow_out-overflow.Tpo -c -o ../../../src/utils/overflow/test_overflow_out-overflow.o `test -f '../../../src/utils/overflow/overflow.c' || echo '$(srcdir)/'`../../../src/utils/overflow/overflow.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../../../src/utils/overflow/$(DEPDIR)/test_overflow_out-overflow.Tpo ../../../src/utils/overflow/$(DEPDIR)/test_overflow_out-overflow.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../../../src/utils/overflow/overflow.c' object='../../../src/utils/overflow/test_overflow_out-overflow.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_overflow_CFLAGS) $(CFLAGS) -c -o ../../../src/utils/overflow/test_overflow-overflow.o `test -f '../../../src/utils/overflow/overflow.c' || echo '$(srcdir)/'`../../../src/utils/overflow/overflow.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_overflow_out_CFLAGS) $(CFLAGS) -c -o ../../../src/utils/overflow/test_overflow_out-overflow.o `test -f '../../../src/utils/overflow/overflow.c' || echo '$(srcdir)/'`../../../src/utils/overflow/overflow.c
 
-../../../src/utils/overflow/test_overflow-overflow.obj: ../../../src/utils/overflow/overflow.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_overflow_CFLAGS) $(CFLAGS) -MT ../../../src/utils/overflow/test_overflow-overflow.obj -MD -MP -MF ../../../src/utils/overflow/$(DEPDIR)/test_overflow-overflow.Tpo -c -o ../../../src/utils/overflow/test_overflow-overflow.obj `if test -f '../../../src/utils/overflow/overflow.c'; then $(CYGPATH_W) '../../../src/utils/overflow/overflow.c'; else $(CYGPATH_W) '$(srcdir)/../../../src/utils/overflow/overflow.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../../../src/utils/overflow/$(DEPDIR)/test_overflow-overflow.Tpo ../../../src/utils/overflow/$(DEPDIR)/test_overflow-overflow.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../../../src/utils/overflow/overflow.c' object='../../../src/utils/overflow/test_overflow-overflow.obj' libtool=no @AMDEPBACKSLASH@
+../../../src/utils/overflow/test_overflow_out-overflow.obj: ../../../src/utils/overflow/overflow.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_overflow_out_CFLAGS) $(CFLAGS) -MT ../../../src/utils/overflow/test_overflow_out-overflow.obj -MD -MP -MF ../../../src/utils/overflow/$(DEPDIR)/test_overflow_out-overflow.Tpo -c -o ../../../src/utils/overflow/test_overflow_out-overflow.obj `if test -f '../../../src/utils/overflow/overflow.c'; then $(CYGPATH_W) '../../../src/utils/overflow/overflow.c'; else $(CYGPATH_W) '$(srcdir)/../../../src/utils/overflow/overflow.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ../../../src/utils/overflow/$(DEPDIR)/test_overflow_out-overflow.Tpo ../../../src/utils/overflow/$(DEPDIR)/test_overflow_out-overflow.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../../../src/utils/overflow/overflow.c' object='../../../src/utils/overflow/test_overflow_out-overflow.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_overflow_CFLAGS) $(CFLAGS) -c -o ../../../src/utils/overflow/test_overflow-overflow.obj `if test -f '../../../src/utils/overflow/overflow.c'; then $(CYGPATH_W) '../../../src/utils/overflow/overflow.c'; else $(CYGPATH_W) '$(srcdir)/../../../src/utils/overflow/overflow.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_overflow_out_CFLAGS) $(CFLAGS) -c -o ../../../src/utils/overflow/test_overflow_out-overflow.obj `if test -f '../../../src/utils/overflow/overflow.c'; then $(CYGPATH_W) '../../../src/utils/overflow/overflow.c'; else $(CYGPATH_W) '$(srcdir)/../../../src/utils/overflow/overflow.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -774,9 +774,9 @@ recheck: all $(check_PROGRAMS)
 	        am__force_recheck=am--force-recheck \
 	        TEST_LOGS="$$log_list"; \
 	exit $$?
-test_overflow.log: test_overflow$(EXEEXT)
-	@p='test_overflow$(EXEEXT)'; \
-	b='test_overflow'; \
+test_overflow.out.log: test_overflow.out$(EXEEXT)
+	@p='test_overflow.out$(EXEEXT)'; \
+	b='test_overflow.out'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
