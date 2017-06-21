@@ -379,7 +379,7 @@ int check_MIN_MAX(void)
 	}
 
 	INFO("\r--- uint8_t test:");
-	INFO("UCHAR_MIN:      %u", 0);
+	INFO("UCHAR_MIN:      %u", (uint8_t)0);
 	INFO("__MIN(uint8_t): %u", __MIN(uint8_t));
 	if (0 != __MIN(uint8_t)) {
 		ERROR("0 is different to __MIN(uint8_t)");
@@ -409,7 +409,7 @@ int check_MIN_MAX(void)
 
 
 	INFO("\r--- uint16_t test:");
-	INFO("UINT16_MIN:      %u", 0);
+	INFO("UINT16_MIN:      %u", (uint16_t)0);
 	INFO("__MIN(uint16_t): %u", __MIN(uint16_t));
 	if (0 != __MIN(uint16_t)) {
 		ERROR("0 is different to __MIN(uint16_t)");
@@ -438,7 +438,7 @@ int check_MIN_MAX(void)
 
 
 	INFO("\r--- uint32_teger test:");
-	INFO("UINT32_MIN:      %u", 0);
+	INFO("UINT32_MIN:      %u", (uint32_t)0);
 	INFO("__MIN(uint32_t): %u", __MIN(uint32_t));
 	if (0 != __MIN(uint32_t)) {
 		ERROR("0 is different to __MIN(uint32_t)");
@@ -468,7 +468,7 @@ int check_MIN_MAX(void)
 
 
 	INFO("\r--- uint64_t test:");
-	INFO("UINT64_MIN:      %lu", 0l);
+	INFO("UINT64_MIN:      %lu", (uint64_t)0ul);
 	INFO("__MIN(uint64_t): %lu", __MIN(uint64_t));
 	if (0 != __MIN(uint64_t)) {
 		ERROR("0 is different to __MIN(uint64_t)");
@@ -597,7 +597,6 @@ do{ \
                 } \
         } \
 } while(0);
-
 
 	_TEST_ASSIGN(int8_t, int8_t);
 	_TEST_ASSIGN(int8_t, uint8_t);
