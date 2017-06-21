@@ -1,0 +1,10 @@
+sizeofsizeof
+sizeofCalculation
+unknownEvaluationOrder:../../test/utils/overflow/test.c
+constStatement:../../test/utils/overflow/test.c
+
+memsetZeroBytes:../../src/utils/list/list_dlinked.c
+
+memsetZeroBytes:../../src/utils/list/list_array.c
+
+memsetZeroBytes:../../src/utils/list/list_stlinked.c

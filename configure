@@ -3565,7 +3565,7 @@ fi
 # AC_DEFINE([CONF_DEFAULT_NUMBER_OF_DEVICES], [0], ["Number of devices connected to the controller"])
 ac_config_headers="$ac_config_headers include/config.h"
 
-ac_config_files="$ac_config_files Makefile src/Makefile src/utils/Makefile src/utils/list/Makefile src/utils/log/Makefile src/utils/urlpharser/Makefile src/utils/base64/Makefile src/utils/overflow/Makefile src/utils/tlock/Makefile include/Makefile include/utils/Makefile include/utils/list/Makefile include/utils/log/Makefile test/Makefile test/utils/Makefile test/utils/list/Makefile test/utils/urlpharser/Makefile test/utils/base64/Makefile test/utils/overflow/Makefile test/utils/tlock/Makefile"
+ac_config_files="$ac_config_files Makefile src/Makefile src/utils/Makefile src/utils/list/Makefile src/utils/log/Makefile src/utils/urlpharser/Makefile src/utils/base64/Makefile src/utils/overflow/Makefile src/utils/tlock/Makefile include/Makefile include/utils/Makefile include/utils/list/Makefile include/utils/log/Makefile test/Makefile test/utils/Makefile test/utils/list/Makefile test/utils/urlpharser/Makefile test/utils/base64/Makefile test/utils/overflow/Makefile test/utils/tlock/Makefile test/staticAnalyzing/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -4318,6 +4318,7 @@ do
     "test/utils/base64/Makefile") CONFIG_FILES="$CONFIG_FILES test/utils/base64/Makefile" ;;
     "test/utils/overflow/Makefile") CONFIG_FILES="$CONFIG_FILES test/utils/overflow/Makefile" ;;
     "test/utils/tlock/Makefile") CONFIG_FILES="$CONFIG_FILES test/utils/tlock/Makefile" ;;
+    "test/staticAnalyzing/Makefile") CONFIG_FILES="$CONFIG_FILES test/staticAnalyzing/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

@@ -57,5 +57,6 @@ AC_CONFIG_FILES([
   test/utils/base64/Makefile
   test/utils/overflow/Makefile
   test/utils/tlock/Makefile
+  test/staticAnalyzing/Makefile
 ])
 AC_OUTPUT
