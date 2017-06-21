@@ -6,4 +6,7 @@ Makefile
 .deps
 .dirstamp
 config.status
-
+/include/config.h
+/include/stamp-h1
+*.swp
+/autom4te.cache
