@@ -8,6 +8,7 @@ Makefile
 .deps
 .dirstamp
 /include/config.h
+/include/config.h.in
 /include/stamp-h1
 
 # http://www.gnu.org/software/automake
