@@ -2,6 +2,9 @@ AC_INIT([utils],[0.1],[der-b@der-b.com])
 AM_INIT_AUTOMAKE([-Wall -Werror subdir-objects])
 AC_PROG_CC
 AM_PROG_CC_C_O
+AM_PROG_AR
+LT_INIT
+AC_PROG_LIBTOOL
 
 AC_ARG_ENABLE([valgrind],
               [AS_HELP_STRING([--disable-valgrind],[Disables the usage of valgrind for test cases.])],
