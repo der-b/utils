@@ -10,6 +10,7 @@ Makefile
 /include/config.h
 /include/config.h.in
 /include/stamp-h1
+/m4
 
 # http://www.gnu.org/software/automake
 

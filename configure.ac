@@ -1,5 +1,6 @@
 AC_INIT([utils],[0.1],[der-b@der-b.com])
 AM_INIT_AUTOMAKE([-Wall -Werror subdir-objects])
+AC_CONFIG_MACRO_DIRS([m4])
 AC_PROG_CC
 AM_PROG_CC_C_O
 AM_PROG_AR
