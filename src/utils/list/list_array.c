@@ -21,7 +21,7 @@
 /*
  * _list_array_realloc()
  */
-inline LRet _list_array_realloc(List * list)
+LRet _list_array_realloc(List * list)
 {
 	struct list_array *larray = (struct list_array *) list->data;
         size_t len, len2;
