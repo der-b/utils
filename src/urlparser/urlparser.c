@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <utils/urlpharser.h>
+#include <utils/urlparser.h>
 #include <utils/log.h>
 
 // possible flags: REG_EXTENDED, REG_ICASE, REG_NOSUB, REG_NEWLINE
@@ -24,45 +24,45 @@
 #define ERRBUFSIZE 1024
 #define PMAXMATCH 255
 
-#define _URLPHARSER_WHOLE (0)
-#define _URLPHARSER_ISABSOLUTE (2)
-#define _URLPHARSER_ABS_SCHEME (3)
-#define _URLPHARSER_ABS_HOST (19)
-#define _URLPHARSER_IS_IP (29)
-#define _URLPHARSER_ABS_PORT (31)
-#define _URLPHARSER_ABS_PATH (37)
+#define _URLPARSER_WHOLE (0)
+#define _URLPARSER_ISABSOLUTE (2)
+#define _URLPARSER_ABS_SCHEME (3)
+#define _URLPARSER_ABS_HOST (19)
+#define _URLPARSER_IS_IP (29)
+#define _URLPARSER_ABS_PORT (31)
+#define _URLPARSER_ABS_PATH (37)
 
-#define _URLPHARSER_REL_PATH (115)
+#define _URLPARSER_REL_PATH (115)
 
 /*
- * urlpharser_init()
+ * urlparser_init()
  */
-int32_t urlpharser_init(URLPharser * urlp)
+int32_t urlparser_init(URLParser * urlp)
 {
 	int32_t ret;
 	char errbuf[ERRBUFSIZE];
 
-	ret = regcomp(&urlp->preg, URLPHARSER_URI_REFERENCE, COMPTYPE);
+	ret = regcomp(&urlp->preg, URLPARSER_URI_REFERENCE, COMPTYPE);
 	if (ret) {
 		regerror(ret, &urlp->preg, errbuf, ERRBUFSIZE);
 		ERROR("regcomp() faild (%s)\n", errbuf);
-		return URLPHARSER_ERR;
+		return URLPARSER_ERR;
 	}
 
 	return 0;
 }
 
 /*
- * urlpharser_url()
+ * urlparser_url()
  */
-URLPharserRes urlpharser_url(URLPharser * urlp, const char *url)
+URLParserRes urlparser_url(URLParser * urlp, const char *url)
 {
 	int32_t ret;
 	char errbuf[ERRBUFSIZE];
 	regmatch_t match[PMAXMATCH];
-	URLPharserRes res;
+	URLParserRes res;
 
-	memset(&res, 0, sizeof(URLPharserRes));
+	memset(&res, 0, sizeof(URLParserRes));
 
 	ret = regexec(&urlp->preg, url, PMAXMATCH, match, EFLAGS);
 	if (ret) {
@@ -71,26 +71,26 @@ URLPharserRes urlpharser_url(URLPharser * urlp, const char *url)
 		fprintf(stderr, "regexec() faild (%s)\n", errbuf);
 #endif
 		DEBUG("Regex dosn't matched.");
-		res.res = URLPHARSER_ERR;
+		res.res = URLPARSER_ERR;
 	} else {
-		res.res = URLPHARSER_SUCCESS;
-                res.length = match[_URLPHARSER_WHOLE].rm_eo - match[_URLPHARSER_WHOLE].rm_so;
+		res.res = URLPARSER_SUCCESS;
+                res.length = match[_URLPARSER_WHOLE].rm_eo - match[_URLPARSER_WHOLE].rm_so;
 
-		if (0 <= match[_URLPHARSER_ISABSOLUTE].rm_so) {
+		if (0 <= match[_URLPARSER_ISABSOLUTE].rm_so) {
 			res.isAbsoluteURI = 1;
 
-			res.scheme.start = match[_URLPHARSER_ABS_SCHEME].rm_so;
-			res.scheme.end = match[_URLPHARSER_ABS_SCHEME].rm_eo;
+			res.scheme.start = match[_URLPARSER_ABS_SCHEME].rm_so;
+			res.scheme.end = match[_URLPARSER_ABS_SCHEME].rm_eo;
 
-			res.host.start = match[_URLPHARSER_ABS_HOST].rm_so;
-			res.host.end = match[_URLPHARSER_ABS_HOST].rm_eo;
-                        res.host.isIP = 0 <= match[_URLPHARSER_IS_IP].rm_eo;
+			res.host.start = match[_URLPARSER_ABS_HOST].rm_so;
+			res.host.end = match[_URLPARSER_ABS_HOST].rm_eo;
+                        res.host.isIP = 0 <= match[_URLPARSER_IS_IP].rm_eo;
 
-			res.port.start = match[_URLPHARSER_ABS_PORT].rm_so;
-			res.port.end = match[_URLPHARSER_ABS_PORT].rm_eo;
+			res.port.start = match[_URLPARSER_ABS_PORT].rm_so;
+			res.port.end = match[_URLPARSER_ABS_PORT].rm_eo;
 
-			res.path.start = match[_URLPHARSER_ABS_PATH].rm_so;
-			res.path.end = match[_URLPHARSER_ABS_PATH].rm_eo;
+			res.path.start = match[_URLPARSER_ABS_PATH].rm_so;
+			res.path.end = match[_URLPARSER_ABS_PATH].rm_eo;
 
 		} else {
 			res.isAbsoluteURI = 0;
@@ -98,8 +98,8 @@ URLPharserRes urlpharser_url(URLPharser * urlp, const char *url)
 			res.scheme.start = -1;
 			res.host.start = -1;
 			res.port.start = -1;
-			res.path.start = match[_URLPHARSER_REL_PATH].rm_so;
-			res.path.end = match[_URLPHARSER_REL_PATH].rm_eo;
+			res.path.start = match[_URLPARSER_REL_PATH].rm_so;
+			res.path.end = match[_URLPARSER_REL_PATH].rm_eo;
 		}
 #ifndef NDEBUG
 #warning "Code for debugging active!"
@@ -136,9 +136,9 @@ URLPharserRes urlpharser_url(URLPharser * urlp, const char *url)
 
 
 /*
- * urlpharser_free()
+ * urlparser_free()
  */
-int32_t urlpharser_free(URLPharser * urlp)
+int32_t urlparser_free(URLParser * urlp)
 {
 	regfree(&urlp->preg);
 

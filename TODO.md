@@ -1,4 +1,3 @@
-- parser is often misspelled: "pharser"
 - fix L\_SIZE
 - Add L\_NEWELEMENT
 - Add Documentation to List Macros

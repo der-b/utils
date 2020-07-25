@@ -1,5 +1,5 @@
 add_library(utils
-    urlpharser/urlpharser.c
+    urlparser/urlparser.c
     base64/base64.c
     overflow/overflow.c
     log/log.c
