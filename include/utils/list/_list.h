@@ -27,6 +27,6 @@
 #define _LIST_INVALID_STRUCT_POSSIBLE  0
 #endif
 
-#include "utils/list.h"
+#include <utils/list.h>
 
 #endif				/* ___list_h__ */

@@ -17,7 +17,6 @@
 
 #include <limits.h>
 
-
 #ifndef SSIZE_MIN
 #ifndef SSIZE_MAX
 #error "SSIZE_MAX is not defined after including limits.h. Where is it defined?"

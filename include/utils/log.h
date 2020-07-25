@@ -20,7 +20,7 @@
  */
 // #define LOG_THREAD
 
-#include "utils/log/log_config.h"
+#include <utils/log/log_config.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <errno.h>

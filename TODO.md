@@ -1,0 +1,6 @@
+- parser is often misspelled: "pharser"
+- fix L\_SIZE
+- Add L\_NEWELEMENT
+- Add Documentation to List Macros
+- Add Makefile in root folder which automaticly creates Makefiles in all subfolders, which redirects make calls to the build folders
+    - Add these Makefile to .gitignore

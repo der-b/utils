@@ -15,7 +15,7 @@
 #ifndef __list_dlinked_h__
 #define __list_dlinked_h__
 
-#include "utils/list.h"
+#include <utils/list.h>
 
 struct list_dlinked {
 	struct list_dlinked_item *first;

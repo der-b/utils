@@ -137,9 +137,9 @@ struct list {
     //  LRet (*removeall)(List *list, void *del); /* maybe dangerous */
 };
 
-#include "utils/list/list_dlinked.h"
-#include "utils/list/list_stlinked.h"
-#include "utils/list/list_array.h"
+#include <utils/list/list_dlinked.h>
+#include <utils/list/list_stlinked.h>
+#include <utils/list/list_array.h>
 
 #define L_NEW(_type, _opts)			 (\
                                          ((_type) == LIST_TYPE_DLINKED) ? (list_dlinked_new(_opts)) : (\

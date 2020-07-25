@@ -12,24 +12,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef __list_array_h__
-#define __list_array_h__
+#include <utils/log.h>
+#include <stdint.h>
 
-#include <utils/list.h>
+void log_buf(const void *buf, size_t length)
+{
+	size_t i;
+	uint8_t *buff = (uint8_t *) buf;
 
-#define _LIST_ARRAY_MINSIZE 16
-
-struct list_array_iter {
-	LIndex pos;
-	List *list;
-};
-
-struct list_array {
-	LIndex count;
-	LIndex max_count;
-	void *data;
-};
-
-List *list_array_new(LOpts * opts);
-
-#endif
+	for (i = 0; i < length; i++) {
+		fprintf(LOG_FD, "%02x ", buff[i]);
+	}
+}

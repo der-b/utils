@@ -12,24 +12,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef __list_array_h__
-#define __list_array_h__
-
+#include <stdio.h>
+#include <stdlib.h>
 #include <utils/list.h>
+#include "unittest.h"
 
-#define _LIST_ARRAY_MINSIZE 16
 
-struct list_array_iter {
-	LIndex pos;
-	List *list;
-};
+/*
+ * state()
+ */
+void ut_state(List * list)
+{
+	LIter iter;
+	struct complex_data *i;
+	printf("State of the list object:\n");
+	printf("element size: %lu\n", L_SIZE(list));
+	printf("length: %lu\n", L_LENGTH(list));
 
-struct list_array {
-	LIndex count;
-	LIndex max_count;
-	void *data;
-};
+	i = L_FIRST(list);
+	if (i) {
+		printf("first:  %d\n", i->number);
+	} else {
+		printf("first:  (null)\n");
+	}
 
-List *list_array_new(LOpts * opts);
+	i = L_LAST(list);
+	if (i) {
+		printf("last:   %d\n", i->number);
+	} else {
+		printf("last:   (null)\n");
+	}
 
-#endif
+	printf("content:");
+	L_FOREACH(list, &iter, i) {
+		printf(" %d", i->number);
+	}
+	printf("\n\n");
+}

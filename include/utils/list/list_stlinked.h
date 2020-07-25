@@ -15,7 +15,7 @@
 #ifndef __LIST_STLINKED_H__
 #define __LIST_STLINKED_H__
 
-#include "utils/list.h"
+#include <utils/list.h>
 
 struct list_stlinked {
 	struct list_stlinked_item *first;
