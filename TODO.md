@@ -1,5 +1,4 @@
-- fix L\_SIZE
+- fix L\_SIZE and L\_LENGTH
 - Add L\_NEWELEMENT
 - Add Documentation to List Macros
-- Add Makefile in root folder which automaticly creates Makefiles in all subfolders, which redirects make calls to the build folders
-    - Add these Makefile to .gitignore
+- Add Parallel
