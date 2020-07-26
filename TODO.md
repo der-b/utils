@@ -1,4 +1,3 @@
-- Add L\_NEWELEMENT
 - Add Documentation to List Macros
 - Add Parallel
 - Add UnitTest for macro _LIST_OPITMIZE

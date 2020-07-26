@@ -2,7 +2,7 @@ build:
 	mkdir build 	
 
 build/CMakeCache.txt: build
-	cd build && cmake ..
+	cd build && cmake -DCMAKE_BUILD_TYPE=Debug ..
 
 .PHONY: delete_build
 delete_build:

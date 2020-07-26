@@ -165,9 +165,9 @@ err:
 
 
 /*
- * list_stlinked_pushback()
+ * list_stlinked_newelement()
  */
-void *list_stlinked_pushback(List * list, void *data)
+void *list_stlinked_newelement(List * list)
 {
     struct list_stlinked *lstl;
     struct list_stlinked_item *item;
@@ -204,12 +204,6 @@ void *list_stlinked_pushback(List * list, void *data)
         goto err_item;
     }
 
-    if (data) {
-        memcpy(item->data, data, L_DATASIZE(list));
-    } else {
-        memset(item->data, 0, L_DATASIZE(list));
-    }
-
     if (NULL == lstl->last) {
 #if _LIST_INVALID_STRUCT_POSSIBLE
         if (lstl->first) {
@@ -235,6 +229,44 @@ err_item:
 err_count:
     // should work since inc was possible
     --lstl->count;
+err:
+    return NULL;
+}
+
+
+/*
+ * list_stlinked_pushback()
+ */
+void *list_stlinked_pushback(List * list, void *data)
+{
+#if _LIST_ASUME_NOT_USING_MACROS
+    if (!list) {
+        goto err;
+    }
+
+    if (LIST_TYPE_STLINKED != list->type) {
+        goto err;
+    }
+#endif
+
+#if _LIST_INVALID_STRUCT_POSSIBLE
+    if (!list->data) {
+        goto err;
+    }
+#endif
+
+    void *dest = list_stlinked_newelement(list);
+    if (!dest) {
+        goto err;
+    }
+
+    if (data) {
+        memcpy(dest, data, L_DATASIZE(list));
+    } else {
+        memset(dest, 0, L_DATASIZE(list));
+    }
+
+    return dest;
 err:
     return NULL;
 }
@@ -857,6 +889,7 @@ LRet list_stlinked_init(List *list, LOpts * opts)
         goto err;
     }
 
+    memset(list, 0, sizeof(*list));
     memcpy(&list->opts, opts, sizeof(LOpts));
 
     list->type = LIST_TYPE_STLINKED;
@@ -865,6 +898,7 @@ LRet list_stlinked_init(List *list, LOpts * opts)
     list->lfree = list_stlinked_free;
     list->ldestroy = list_stlinked_destroy;
     list->size = list_stlinked_size;
+    list->newelement = list_stlinked_newelement;
     list->insert = list_stlinked_insert;
     list->remove = list_stlinked_remove;
     list->get = list_stlinked_get;

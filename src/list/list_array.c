@@ -203,9 +203,9 @@ err:
 
 
 /*
- * list_array_pushback()
+ * list_array_newelement()
  */
-void *list_array_pushback(List * list, void *data)
+void *list_array_newelement(List * list)
 {
     struct list_array *larray;
     size_t offset;
@@ -244,6 +244,39 @@ void *list_array_pushback(List * list, void *data)
     if (__INC(larray->count)) {
         goto err;
     }
+
+    return ptr;
+err:
+    return NULL;
+}
+
+
+/*
+ * list_array_pushback()
+ */
+void *list_array_pushback(List * list, void *data)
+{
+    struct list_array *larray;
+    size_t offset;
+    uint8_t *ptr;
+
+#if _LIST_ASSUME_NOT_USING_MACROS
+    if (!list) {
+        goto err;
+    }
+
+    if (LIST_TYPE_ARRAY != list->type) {
+        goto err;
+    }
+#endif
+
+#if _LIST_INVALID_STRUCT_POSSIBLE
+    if (!list->data) {
+        goto err;
+    }
+#endif
+
+    ptr = list_array_newelement(list); 
 
     if (data) {
         memcpy(ptr, data, L_DATASIZE(list));
@@ -805,6 +838,7 @@ LRet list_array_init(List *list, LOpts *opts)
         goto err;
     }
 
+    memset(list, 0, sizeof(*list));
     memcpy(&list->opts, opts, sizeof(LOpts));
 
     list->type = LIST_TYPE_ARRAY;
@@ -813,6 +847,7 @@ LRet list_array_init(List *list, LOpts *opts)
     list->lfree = list_array_free;
     list->ldestroy = list_array_destroy;
     list->size = list_array_size;
+    list->newelement = list_array_newelement;
     list->insert = list_array_insert;
     list->remove = list_array_remove;
     list->get = list_array_get;

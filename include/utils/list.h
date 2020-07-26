@@ -119,25 +119,26 @@ struct list {
     enum list_type type;
     LOpts opts;
     void *data;
-    LRet (*lfree) (List * list);
-    LRet (*ldestroy) (List * list);
-    LIndex (*size) (List * list);
-    void *(*insert) (List * list, LIndex pos, void *data);
-    LRet (*remove) (List * list, LIndex pos, void *data);
-    void *(*get) (List * list, LIndex pos);
-    void *(*last) (List * list);
-    void *(*pushback) (List * list, void *data);
-    LRet (*popback) (List * list, void *data);
-    void *(*first) (List * list);
-    void *(*pushfront) (List * list, void *data);
-    LRet (*popfront) (List * list, void *data);
-    void *(*iter) (List * list, LIter * iter);
-    LRet (*clear) (List * list);
+    LRet (*lfree) (List *list);
+    LRet (*ldestroy) (List *list);
+    LIndex (*size) (List *list);
+    void *(*insert) (List *list, LIndex pos, void *data);
+    LRet (*remove) (List *list, LIndex pos, void *data);
+    void *(*get) (List *list, LIndex pos);
+    void *(*last) (List *list);
+    void *(*newelement) (List *list);
+    void *(*pushback) (List *list, void *data);
+    LRet (*popback) (List *list, void *data);
+    void *(*first) (List *list);
+    void *(*pushfront) (List *list, void *data);
+    LRet (*popfront) (List *list, void *data);
+    void *(*iter) (List *list, LIter *iter);
+    LRet (*clear) (List *list);
 
     int (*equal) (void *data1, void *data2);
     int (*cmp) (void *data1, void *data2);
-    LRet (*removefirst) (List * list, void *del, void *data);
-    LRet (*removelast) (List * list, void *del, void *data);
+    LRet (*removefirst) (List *list, void *del, void *data);
+    LRet (*removelast) (List *list, void *del, void *data);
     //  LRet (*removeall)(List *list, void *del); /* maybe dangerous */
 };
 
@@ -180,7 +181,12 @@ struct list {
                                          )))\
                                      )
 
-#define L_DATASIZE(_list)            ((_list) ? ((_list)->opts.datasize) : (0))
+/**
+ * Returns the size in bytes of the elements stored in the list.
+ *
+ * @return Size of a list element.
+ */
+#define L_DATASIZE(_list) ((_list) ? ((_list)->opts.datasize) : (0))
 
 /**
  * Destroys the list with L_DESTORY() and frees the allocated memory for the list itself.
@@ -190,7 +196,7 @@ struct list {
  * @param _list Pointer to the list which shall be freed.
  * @return LIST_OK on succes, otherwise LIST_ERR.
  */
-#define L_FREE(_list)                (((_list) && (_list)->lfree) ? ((_list)->lfree(_list)) : (LIST_ERR))
+#define L_FREE(_list) (((_list) && (_list)->lfree) ? ((_list)->lfree(_list)) : (LIST_ERR))
 
 /**
  * Destroys the list but does not frees the allocated memory for the list itself.
@@ -200,8 +206,25 @@ struct list {
  * @param _list Pointer to the list which shall be destroyed.
  * @return LIST_OK on succes, otherwise LIST_ERR.
  */
-#define L_DESTROY(_list)             (((_list) && (_list)->ldestroy) ? ((_list)->ldestroy(_list)) : (LIST_ERR))
-#define L_SIZE(_list)                (((_list) && (_list)->size) ? ((_list)->size(_list)) : (LIST_ERR))
+#define L_DESTROY(_list) (((_list) && (_list)->ldestroy) ? ((_list)->ldestroy(_list)) : (LIST_ERR))
+
+/**
+ * Returns the number of elements.
+ *
+ * @return Number of elements.
+ */
+#define L_SIZE(_list) (((_list) && (_list)->size) ? ((_list)->size(_list)) : (LIST_ERR))
+
+/**
+ * Addes a new element to the list, which is not initialized and returns a pointer to 
+ * element.
+ *
+ * It is implementation dependend at which position the new element is inserted.
+ *
+ * @return Pointer to a new not initialized element on success, otherwise NULL.
+ */
+#define L_NEWELEMENT(_list) (((_list) && (_list)->newelement) ? ((_list)->newelement(_list)) : (NULL))
+
 #define L_INSERT(_list, _pos, _data) (((_list) && (_list)->insert) ? ((_list)->insert((_list), (_pos), (_data))) : (NULL))
 #define L_REMOVE(_list, _pos, _data) (((_list) && (_list)->remove) ? ((_list)->remove((_list), (_pos), (_data))) : (LIST_ERR))
 #define L_GET(_list, _pos)			 (((_list) && (_list)->get) ? ((_list)->get((_list), (_pos))) : (NULL))

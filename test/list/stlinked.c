@@ -17,5 +17,8 @@
 
 int main(int argc, char **argv)
 {
-	return ut_generic(LIST_TYPE_STLINKED);
+	if (UT_SUCCESS != ut_generic(LIST_TYPE_STLINKED)) {
+        return UT_FAIL;
+    }
+    return ut_newelement(LIST_TYPE_STLINKED);
 }

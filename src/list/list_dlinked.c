@@ -88,9 +88,9 @@ err:
 
 
 /*
- * list_dlinked_pushback()
+ * list_dlinked_newelement()
  */
-void *list_dlinked_pushback(List * list, void *data)
+void *list_dlinked_newelement(List * list)
 {
     struct list_dlinked *ldl;
     struct list_dlinked_item *i;
@@ -121,12 +121,6 @@ void *list_dlinked_pushback(List * list, void *data)
         goto err_i;
     }
 
-    if (data) {
-        memcpy(i->data, data, L_DATASIZE(list));
-    } else {
-        memset(i->data, 0, L_DATASIZE(list));
-    }
-
     if (!ldl->last) {
 #if _LIST_INVALID_STRUCT_POSSIBLE
         if (ldl->first) {
@@ -150,6 +144,44 @@ err_i_data:
     free(i->data);
 err_i:
     free(i);
+err:
+    return NULL;
+}
+
+
+/*
+ * list_dlinked_pushback()
+ */
+void *list_dlinked_pushback(List * list, void *data)
+{
+#if _LIST_ASUME_NOT_USING_MACROS
+    if (!list) {
+        goto err;
+    }
+
+    if (LIST_TYPE_DLINKED != list->type) {
+        goto err;
+    }
+#endif
+
+#if _LIST_INVALID_STRUCT_POSSIBLE
+    if (!list->data) {
+        goto err;
+    }
+#endif
+
+    void *dest = list_dlinked_newelement(list);
+    if (!dest) {
+        goto err;
+    }
+
+    if (data) {
+        memcpy(dest, data, L_DATASIZE(list));
+    } else {
+        memset(dest, 0, L_DATASIZE(list));
+    }
+
+    return dest;
 err:
     return NULL;
 }
@@ -837,6 +869,7 @@ LRet list_dlinked_init(List *list, LOpts *opts)
         goto err;
     }
 
+    memset(list, 0, sizeof(*list));
     memcpy(&list->opts, opts, sizeof(LOpts));
     list->data = ldl;
 
@@ -845,6 +878,7 @@ LRet list_dlinked_init(List *list, LOpts *opts)
     list->lfree = list_dlinked_free;
     list->ldestroy = list_dlinked_destroy;
     list->size = list_dlinked_size;
+    list->newelement = list_dlinked_newelement;
     list->insert = list_dlinked_insert;
     list->remove = list_dlinked_remove;
     list->get = list_dlinked_get;

@@ -17,5 +17,8 @@
 
 int main(int argc, char **argv)
 {
-	return ut_generic(LIST_TYPE_ARRAY);
+	if (UT_SUCCESS != ut_generic(LIST_TYPE_ARRAY)) {
+        return UT_FAIL;
+    }
+    return ut_newelement(LIST_TYPE_ARRAY);
 }

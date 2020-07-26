@@ -29,5 +29,6 @@ void ut_state(List * list);
 
 int ut_generic(enum list_type type);
 int ut_equal(enum list_type type);
+int ut_newelement(enum list_type type);
 
 #endif
