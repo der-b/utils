@@ -32,7 +32,7 @@ int ut_equal(enum list_type type)
 	int data;
 
 	memset(&opts, 0, sizeof(opts));
-	opts.size = sizeof(int);
+	opts.datasize = sizeof(int);
 
   /*** init list ***/
 	printf("L_NEW\n");

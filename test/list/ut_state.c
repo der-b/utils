@@ -26,8 +26,8 @@ void ut_state(List * list)
 	LIter iter;
 	struct complex_data *i;
 	printf("State of the list object:\n");
-	printf("element size: %lu\n", L_SIZE(list));
-	printf("length: %lu\n", L_LENGTH(list));
+	printf("element size: %lu\n", L_DATASIZE(list));
+	printf("length: %lu\n", L_SIZE(list));
 
 	i = L_FIRST(list);
 	if (i) {

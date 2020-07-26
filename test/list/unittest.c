@@ -30,7 +30,7 @@ int ut_generic(enum list_type type)
 	struct complex_data data;
 
 	memset(&opts, 0, sizeof(opts));
-	opts.size = sizeof(int);
+	opts.datasize = sizeof(int);
 
         cnt.number = 0;
         cnt.number2 = 42.23;
@@ -141,7 +141,7 @@ int ut_generic(enum list_type type)
 
   /*** remove last elements ***/
 	printf("L_REMOVE last elements\n");
-        if (L_REMOVE(list, L_LENGTH(list) - 1, &data)) {
+        if (L_REMOVE(list, L_SIZE(list) - 1, &data)) {
                 fprintf(stderr,
                         "ERR: L_REMOVE returned LIST_ERR\n");
                 return UT_FAIL;

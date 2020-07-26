@@ -109,7 +109,7 @@ struct list_iter {
 struct list_options {
     LFlags flags;
     void *data;
-    LSize size;
+    LSize datasize;
 };
 
 struct list {
@@ -117,7 +117,7 @@ struct list {
     LOpts opts;
     void *data;
     LRet (*lfree) (List * list);
-    LIndex (*length) (List * list);
+    LIndex (*size) (List * list);
     void *(*insert) (List * list, LIndex pos, void *data);
     LRet (*remove) (List * list, LIndex pos, void *data);
     void *(*get) (List * list, LIndex pos);
@@ -149,10 +149,10 @@ struct list {
                                          )))\
                                      )
 
-#define L_SIZE(_list)                ((_list) ? ((_list)->opts.size) : (0))
+#define L_DATASIZE(_list)            ((_list) ? ((_list)->opts.datasize) : (0))
 
 #define L_FREE(_list)                (((_list) && (_list)->lfree) ? ((_list)->lfree(_list)) : (LIST_ERR))
-#define L_LENGTH(_list)              (((_list) && (_list)->length) ? ((_list)->length(_list)) : (LIST_ERR))
+#define L_SIZE(_list)                (((_list) && (_list)->size) ? ((_list)->size(_list)) : (LIST_ERR))
 #define L_INSERT(_list, _pos, _data) (((_list) && (_list)->insert) ? ((_list)->insert((_list), (_pos), (_data))) : (NULL))
 #define L_REMOVE(_list, _pos, _data) (((_list) && (_list)->remove) ? ((_list)->remove((_list), (_pos), (_data))) : (LIST_ERR))
 #define L_GET(_list, _pos)			 (((_list) && (_list)->get) ? ((_list)->get((_list), (_pos))) : (NULL))

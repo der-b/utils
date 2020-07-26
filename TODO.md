@@ -1,4 +1,3 @@
-- fix L\_SIZE and L\_LENGTH
 - Add L\_NEWELEMENT
 - Add Documentation to List Macros
 - Add Parallel
