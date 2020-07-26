@@ -96,9 +96,9 @@ err:
 
 
 /*
- * list_array_free()
+ * list_array_destroy()
  */
-LRet list_array_free(List * list)
+LRet list_array_destroy(List * list)
 {
     struct list_array *larray;
 
@@ -123,13 +123,49 @@ LRet list_array_free(List * list)
     free(larray->data);
     free(larray);
     list->data = NULL;
-    free(list);
 
     return LIST_OK;
 #if _LIST_ASSUME_NOT_USING_MACROS || _LIST_INVALID_STRUCT_POSSIBLE
 err:
     return LIST_ERR;
 #endif
+}
+
+
+/*
+ * list_array_free()
+ */
+LRet list_array_free(List * list)
+{
+    struct list_array *larray;
+
+#if _LIST_ASSUME_NOT_USING_MACROS
+    if (!list) {
+        goto err;
+    }
+
+    if (LIST_TYPE_ARRAY != list->type) {
+        goto err;
+    }
+#endif
+
+#if _LIST_INVALID_STRUCT_POSSIBLE
+    if (!list->data) {
+        goto err;
+    }
+#endif
+
+    larray = (struct list_array *) list->data;
+
+    if(list_array_destroy(list)) {
+        goto err;
+    }
+
+    free(list);
+
+    return LIST_OK;
+err:
+    return LIST_ERR;
 }
 
 
@@ -746,12 +782,15 @@ err:
 
 
 /*
- * list_array_new()
+ * list_array_init()
  */
-List *list_array_new(LOpts * opts)
+LRet list_array_init(List *list, LOpts *opts)
 {
-    List *list;
     struct list_array *larray;
+
+    if (!list) {
+        goto err;
+    }
 
     if (!opts) {
         goto err;
@@ -761,14 +800,9 @@ List *list_array_new(LOpts * opts)
         goto err;
     }
 
-    list = calloc(1, sizeof(List));
-    if (!list) {
-        goto err;
-    }
-
     larray = calloc(1, sizeof(struct list_array));
     if (!larray) {
-        goto err_list;
+        goto err;
     }
 
     memcpy(&list->opts, opts, sizeof(LOpts));
@@ -777,6 +811,7 @@ List *list_array_new(LOpts * opts)
     list->data = larray;
 
     list->lfree = list_array_free;
+    list->ldestroy = list_array_destroy;
     list->size = list_array_size;
     list->insert = list_array_insert;
     list->remove = list_array_remove;
@@ -789,6 +824,28 @@ List *list_array_new(LOpts * opts)
     list->popfront = list_array_popfront;
     list->iter = list_array_iter;
     list->removelast = list_array_removelast;
+
+    return LIST_OK;
+err:
+    return LIST_ERR;
+}
+
+
+/*
+ * list_array_new()
+ */
+List *list_array_new(LOpts * opts)
+{
+    List *list;
+
+    list = calloc(1, sizeof(List));
+    if (!list) {
+        goto err;
+    }
+
+    if (list_array_init(list, opts)) {
+        goto err_list;
+    }
 
     return list;
 err_list:

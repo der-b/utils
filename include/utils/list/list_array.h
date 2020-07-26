@@ -30,6 +30,7 @@ struct list_array {
 	void *data;
 };
 
-List *list_array_new(LOpts * opts);
+List *list_array_new(LOpts *opts);
+LRet list_array_init(List *list, LOpts *opts);
 
 #endif

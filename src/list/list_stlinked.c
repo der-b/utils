@@ -766,9 +766,9 @@ err:
 
 
 /*
- * list_stlinked_free()
+ * list_stlinked_destroy()
  */
-LRet list_stlinked_free(List * list)
+LRet list_stlinked_destroy(List * list)
 {
 
 #if _LIST_ASUME_NOT_USING_MACROS
@@ -791,6 +791,40 @@ LRet list_stlinked_free(List * list)
     }
 
     free(list->data);
+
+    return LIST_OK;
+err:
+    return LIST_ERR;
+}
+
+
+
+
+/*
+ * list_stlinked_free()
+ */
+LRet list_stlinked_free(List * list)
+{
+
+#if _LIST_ASUME_NOT_USING_MACROS
+    if (!list) {
+        goto err;
+    }
+
+    if (LIST_TYPE_STLINKED != list->type) {
+        goto err;
+    }
+#endif
+
+#if _LIST_INVALID_STRUCT_POSSIBLE
+    if (!list->data) {
+        goto err;
+    }
+#endif
+    if (list_stlinked_destroy(list)) {
+        goto err;
+    }
+
     free(list);
 
     return LIST_OK;
@@ -800,12 +834,15 @@ err:
 
 
 /*
- * list_stlinked_new();
+ * list_stlinked_init();
  */
-List *list_stlinked_new(LOpts * opts)
+LRet list_stlinked_init(List *list, LOpts * opts)
 {
-    List *list;
     struct list_stlinked *lstl;
+
+    if (!list) {
+        goto err;
+    }
 
     if (!opts) {
         goto err;
@@ -820,17 +857,13 @@ List *list_stlinked_new(LOpts * opts)
         goto err;
     }
 
-    list = calloc(1, sizeof(*list));
-    if (!list) {
-        goto err_lstl;
-    }
-
     memcpy(&list->opts, opts, sizeof(LOpts));
 
     list->type = LIST_TYPE_STLINKED;
     list->data = lstl;
 
     list->lfree = list_stlinked_free;
+    list->ldestroy = list_stlinked_destroy;
     list->size = list_stlinked_size;
     list->insert = list_stlinked_insert;
     list->remove = list_stlinked_remove;
@@ -845,9 +878,30 @@ List *list_stlinked_new(LOpts * opts)
     list->removelast = list_stlinked_removelast;
     list->clear = list_stlinked_clear;
 
+    return LIST_OK;
+err:
+    return LIST_ERR;
+}
+
+/*
+ * list_stlinked_new();
+ */
+List *list_stlinked_new(LOpts * opts)
+{
+    List *list;
+
+    list = calloc(1, sizeof(*list));
+    if (!list) {
+        goto err;
+    }
+
+    if (list_stlinked_init(list, opts)) {
+        goto err_list;
+    }
+
     return list;
-err_lstl:
-    free(lstl);
+err_list:
+    free(list);
 err:
     return NULL;
 }

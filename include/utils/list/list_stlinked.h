@@ -33,6 +33,7 @@ struct list_stlinked_iter {
 	LIndex i;
 };
 
-List *list_stlinked_new(LOpts * opts);
+List *list_stlinked_new(LOpts *opts);
+LRet list_stlinked_init(List *list, LOpts *opts);
 
 #endif

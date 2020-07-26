@@ -29,6 +29,7 @@ struct list_dlinked_item {
 	void *data;
 };
 
-List *list_dlinked_new(LOpts * opts);
+List *list_dlinked_new(LOpts *opts);
+LRet list_dlinked_init(List *list, LOpts *opts);
 
 #endif				/* __list_dlinked_h__ */

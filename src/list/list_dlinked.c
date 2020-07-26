@@ -747,9 +747,9 @@ err:
 
 
 /* 
- * list_dlinked_free()
+ * list_dlinked_destroy()
  */
-LRet list_dlinked_free(List * list)
+LRet list_dlinked_destroy(List * list)
 {
 #if _LIST_ASUME_NOT_USING_MACROS
     if (!list) {
@@ -772,6 +772,38 @@ LRet list_dlinked_free(List * list)
     }
 
     free(list->data);
+
+    return LIST_OK;
+err:
+    return LIST_ERR;
+}
+
+
+/* 
+ * list_dlinked_free()
+ */
+LRet list_dlinked_free(List * list)
+{
+#if _LIST_ASUME_NOT_USING_MACROS
+    if (!list) {
+        goto err;
+    }
+
+    if (LIST_TYPE_DLINKED != list->type) {
+        goto err;
+    }
+#endif
+
+#if _LIST_INVALID_STRUCT_POSSIBLE
+    if (!list->data) {
+        goto err;
+    }
+#endif
+
+    if (list_dlinked_destroy(list)) {
+        goto err;
+    }
+
     free(list);
 
     return LIST_OK;
@@ -781,12 +813,15 @@ err:
 
 
 /*
- * list_dlinked_new()
+ * list_dlinked_init()
  */
-List *list_dlinked_new(LOpts * opts)
+LRet list_dlinked_init(List *list, LOpts *opts)
 {
     struct list_dlinked *ldl;
-    List *list;
+
+    if (!list) {
+        goto err;
+    }
 
     if (!opts) {
         goto err;
@@ -802,18 +837,13 @@ List *list_dlinked_new(LOpts * opts)
         goto err;
     }
 
-    /* new list structure */
-    list = calloc(1, sizeof(List));
-    if (!list) {
-        goto err_ldl;
-    }
-
     memcpy(&list->opts, opts, sizeof(LOpts));
     list->data = ldl;
 
     list->type = LIST_TYPE_DLINKED;
 
     list->lfree = list_dlinked_free;
+    list->ldestroy = list_dlinked_destroy;
     list->size = list_dlinked_size;
     list->insert = list_dlinked_insert;
     list->remove = list_dlinked_remove;
@@ -828,9 +858,32 @@ List *list_dlinked_new(LOpts * opts)
     list->removelast = list_dlinked_removelast;
     list->clear = list_dlinked_clear;
 
+    return LIST_OK;
+err:
+    return LIST_ERR;
+}
+
+
+/*
+ * list_dlinked_new()
+ */
+List *list_dlinked_new(LOpts * opts)
+{
+    List *list;
+
+    /* new list structure */
+    list = calloc(1, sizeof(List));
+    if (!list) {
+        goto err;
+    }
+
+    if (list_dlinked_init(list, opts)) {
+        goto err_list;
+    }
+
     return list;
-err_ldl:
-    free(ldl);
+err_list:
+    free(list);
 err:
     return NULL;
 }

@@ -76,17 +76,17 @@ enum list_type {
      * In the case, that the array is to small, then a memory reallocation will occour. The
      * Reallocation will double or halve the current array size. That means the greater the array
      * the more seldom a reallocation will occur. In case of adding an element the reallocation may
-     * have a superior complexity since the "reaclloc" call may have to copy the array depending of
+     * have a higher complexity since the "reaclloc" call may have to copy the array depending of
      * the memory fraction.
      *
-     * This implementation is inefficient while inserting or deleting elements which are not at the 
+     * This implementation is inefficient for inserting or deleting elements which are not at the 
      * end of the list. The complexity for removing or inserting a element at the beginning is
      * O(n). When the array has to be expanded the complexity may rise due to the copying actions
      * of realloc().
      *
      * Accessing an element has always the complexity O(1) since the position can be calculated.
      *
-     * The implementation is also efficient while itterating through the list since all data is lays
+     * The implementation is also efficient while itterating through the list since all data is arranged
      * conteneously in the memory and chaching mechanism of the CPU can be applayed.
      *
      * In terms of memory usage the implementation is efficient. Only a counter and a pointer to the 
@@ -95,6 +95,9 @@ enum list_type {
      *
      * Please note, that the user of listimplementation have to decide whether he use the list as
      * pointer array or he insert whole elements.
+     *
+     * Please note, any modification (L_INSERT, L_DELETE, L_PUSHBACK, ...) of the list may invalidate
+     * poiners to elements of the list!
      */
     LIST_TYPE_ARRAY
 };
@@ -117,6 +120,7 @@ struct list {
     LOpts opts;
     void *data;
     LRet (*lfree) (List * list);
+    LRet (*ldestroy) (List * list);
     LIndex (*size) (List * list);
     void *(*insert) (List * list, LIndex pos, void *data);
     LRet (*remove) (List * list, LIndex pos, void *data);
@@ -141,6 +145,16 @@ struct list {
 #include <utils/list/list_stlinked.h>
 #include <utils/list/list_array.h>
 
+/**
+ * Allocates and initialize a list and returns a pointer to this List.
+ *
+ * The counter part to this macro is L_FREE().
+ * Initialize the new allocated list with L_INIT().
+ *
+ * @param _type Defines which type of list is created. (see enum list_type)
+ * @param _opts Options given to the list. (see LOpts).
+ * @return Pointer to the List on succes, otherwise NULL.
+ */
 #define L_NEW(_type, _opts)			 (\
                                          ((_type) == LIST_TYPE_DLINKED) ? (list_dlinked_new(_opts)) : (\
                                          ((_type) == LIST_TYPE_STLINKED) ? (list_stlinked_new(_opts)) : (\
@@ -149,9 +163,44 @@ struct list {
                                          )))\
                                      )
 
+/**
+ * Initialize a list.
+ *
+ * The counter part to this macro is L_DESTORY().
+ *
+ * @param _type Defines which type of list is created. (see enum list_type)
+ * @param _opts Options given to the list. (see LOpts).
+ * @return LIST_OK on succes, otherwise LIST_ERR.
+ */
+#define L_INIT(_list, _type, _opts)  (\
+                                         ((_type) == LIST_TYPE_DLINKED) ? (list_dlinked_init(_list, _opts)) : (\
+                                         ((_type) == LIST_TYPE_STLINKED) ? (list_stlinked_init(_list, _opts)) : (\
+                                         ((_type) == LIST_TYPE_ARRAY) ? (list_array_init(_list, _opts)) : (\
+                                         LIST_ERR\
+                                         )))\
+                                     )
+
 #define L_DATASIZE(_list)            ((_list) ? ((_list)->opts.datasize) : (0))
 
+/**
+ * Destroys the list with L_DESTORY() and frees the allocated memory for the list itself.
+ *
+ * This is the counterpart to L_NEW().
+ *
+ * @param _list Pointer to the list which shall be freed.
+ * @return LIST_OK on succes, otherwise LIST_ERR.
+ */
 #define L_FREE(_list)                (((_list) && (_list)->lfree) ? ((_list)->lfree(_list)) : (LIST_ERR))
+
+/**
+ * Destroys the list but does not frees the allocated memory for the list itself.
+ *
+ * This is the counterpart to L_INIT().
+ *
+ * @param _list Pointer to the list which shall be destroyed.
+ * @return LIST_OK on succes, otherwise LIST_ERR.
+ */
+#define L_DESTROY(_list)             (((_list) && (_list)->ldestroy) ? ((_list)->ldestroy(_list)) : (LIST_ERR))
 #define L_SIZE(_list)                (((_list) && (_list)->size) ? ((_list)->size(_list)) : (LIST_ERR))
 #define L_INSERT(_list, _pos, _data) (((_list) && (_list)->insert) ? ((_list)->insert((_list), (_pos), (_data))) : (NULL))
 #define L_REMOVE(_list, _pos, _data) (((_list) && (_list)->remove) ? ((_list)->remove((_list), (_pos), (_data))) : (LIST_ERR))

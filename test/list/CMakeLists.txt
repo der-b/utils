@@ -57,3 +57,69 @@ target_link_libraries(test_list_dlinked_equal.out "${CMAKE_BINARY_DIR}/libutils.
 add_test(test_list_dlinked_equal.out test_list_dlinked_equal.out)
 add_dependencies(check_memcheck test_list_dlinked_equal.out)
 add_dependencies(test_list_dlinked_equal.out utils)
+
+# ----- test_list_array_prealloc.out -----
+add_executable(test_list_array_prealloc.out EXCLUDE_FROM_ALL
+    array.c
+    unittest.c
+    ut_state.c)
+target_compile_options(test_list_array_prealloc.out PRIVATE -D_LIST_PREALLOC)
+target_link_libraries(test_list_array_prealloc.out "${CMAKE_BINARY_DIR}/libutils.a")
+add_test(test_list_array_prealloc.out test_list_array_prealloc.out)
+add_dependencies(check_memcheck test_list_array_prealloc.out)
+add_dependencies(test_list_array_prealloc.out utils)
+
+# ----- test_list_array_prealloc.out -----
+add_executable(test_list_array_equal_prealloc.out EXCLUDE_FROM_ALL
+    array_ut_equal.c
+    ut_equal.c
+    ut_state.c)
+target_compile_options(test_list_array_equal_prealloc.out PRIVATE -D_LIST_PREALLOC)
+target_link_libraries(test_list_array_equal_prealloc.out "${CMAKE_BINARY_DIR}/libutils.a")
+add_test(test_list_array_equal_prealloc.out test_list_array_equal_prealloc.out)
+add_dependencies(check_memcheck test_list_array_equal_prealloc.out)
+add_dependencies(test_list_array_equal_prealloc.out utils)
+
+# ----- test_list_stlinked_prealloc.out -----
+add_executable(test_list_stlinked_prealloc.out EXCLUDE_FROM_ALL
+    stlinked.c
+    unittest.c
+    ut_state.c)
+target_compile_options(test_list_stlinked_prealloc.out PRIVATE -D_LIST_PREALLOC)
+target_link_libraries(test_list_stlinked_prealloc.out "${CMAKE_BINARY_DIR}/libutils.a")
+add_test(test_list_stlinked_prealloc.out test_list_stlinked_prealloc.out)
+add_dependencies(check_memcheck test_list_stlinked_prealloc.out)
+add_dependencies(test_list_stlinked_prealloc.out utils)
+
+# ----- test_list_stlinked_prealloc.out -----
+add_executable(test_list_stlinked_equal_prealloc.out EXCLUDE_FROM_ALL
+    stlinked_ut_equal.c
+    ut_equal.c
+    ut_state.c)
+target_compile_options(test_list_stlinked_equal_prealloc.out PRIVATE -D_LIST_PREALLOC)
+target_link_libraries(test_list_stlinked_equal_prealloc.out "${CMAKE_BINARY_DIR}/libutils.a")
+add_test(test_list_stlinked_equal_prealloc.out test_list_stlinked_equal_prealloc.out)
+add_dependencies(check_memcheck test_list_stlinked_equal_prealloc.out)
+add_dependencies(test_list_stlinked_equal_prealloc.out utils)
+
+# ----- test_list_dlinked_prealloc.out -----
+add_executable(test_list_dlinked_prealloc.out EXCLUDE_FROM_ALL
+    dlinked.c
+    unittest.c
+    ut_state.c)
+target_compile_options(test_list_dlinked_prealloc.out PRIVATE -D_LIST_PREALLOC)
+target_link_libraries(test_list_dlinked_prealloc.out "${CMAKE_BINARY_DIR}/libutils.a")
+add_test(test_list_dlinked_prealloc.out test_list_dlinked_prealloc.out)
+add_dependencies(check_memcheck test_list_dlinked_prealloc.out)
+add_dependencies(test_list_dlinked_prealloc.out utils)
+
+# ----- test_list_dlinked_prealloc.out -----
+add_executable(test_list_dlinked_equal_prealloc.out EXCLUDE_FROM_ALL
+    dlinked_ut_equal.c
+    ut_equal.c
+    ut_state.c)
+target_compile_options(test_list_dlinked_equal_prealloc.out PRIVATE -D_LIST_PREALLOC)
+target_link_libraries(test_list_dlinked_equal_prealloc.out "${CMAKE_BINARY_DIR}/libutils.a")
+add_test(test_list_dlinked_equal_prealloc.out test_list_dlinked_equal_prealloc.out)
+add_dependencies(check_memcheck test_list_dlinked_equal_prealloc.out)
+add_dependencies(test_list_dlinked_equal_prealloc.out utils)

@@ -25,7 +25,12 @@ int equal(void *data1, void *data2)
 
 int ut_equal(enum list_type type)
 {
-	List *list = NULL;
+#ifndef _LIST_PREALLOC
+    List *list = NULL;
+#else 
+    List _list;
+    List *list = &_list;
+#endif
 	LOpts opts;
 	int i;
 	int del;
@@ -34,13 +39,22 @@ int ut_equal(enum list_type type)
 	memset(&opts, 0, sizeof(opts));
 	opts.datasize = sizeof(int);
 
-  /*** init list ***/
-	printf("L_NEW\n");
-	list = L_NEW(type, &opts);
-	if (!list) {
-		fprintf(stderr, "ERR: L_NEW returned NULL pointer\n");
-		return UT_FAIL;
-	}
+#ifndef _LIST_PREALLOC
+    /*** new list ***/
+    printf("L_NEW\n");
+    list = L_NEW(type, &opts);
+    if (!list) {
+        fprintf(stderr, "ERR: L_NEW returned NULL pointer\n");
+        return UT_FAIL;
+    }
+#else 
+    /*** init list ***/
+    printf("L_INIT\n");
+    if (L_INIT(&_list, type, &opts)) {
+        fprintf(stderr, "ERR: L_INIT did not return LIST_OK pointer\n");
+        return UT_FAIL;
+    }
+#endif
 
 	ut_state(list);
 
@@ -138,9 +152,15 @@ int ut_equal(enum list_type type)
 
 	ut_state(list);
 
-	if (L_FREE(list)) {
-		return UT_FAIL;
-	}
+#ifndef _LIST_PREALLOC
+    if (L_FREE(list)) {
+        return UT_FAIL;
+    }
+#else
+    if (L_DESTROY(&_list)) {
+        return UT_FAIL;
+    }
+#endif
 
 	return UT_SUCCESS;
 }
