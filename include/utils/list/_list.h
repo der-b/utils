@@ -16,10 +16,10 @@
 #define ___list_h__
 
 #ifndef _LIST_OPTIMIZE
-#define _LIST_OPTIMIZE 1
+#define _LIST_OPTIMIZE 0
 #endif
 
-#if _LIST_OPTIMIZE
+#if (0 == _LIST_OPTIMIZE)
 #define _LIST_ASSUME_NOT_USING_MACROS  1
 #define _LIST_INVALID_STRUCT_POSSIBLE  1
 #else
