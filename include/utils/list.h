@@ -169,8 +169,9 @@ struct list {
  *
  * The counter part to this macro is L_DESTORY().
  *
+ * @param _list Pointer to List object, which can be initialized.
  * @param _type Defines which type of list is created. (see enum list_type)
- * @param _opts Options given to the list. (see LOpts).
+ * @param _opts Pointer to options (LOpts) given to the list. (see LOpts).
  * @return LIST_OK on succes, otherwise LIST_ERR.
  */
 #define L_INIT(_list, _type, _opts)  (\
