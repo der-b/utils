@@ -1,7 +1,6 @@
 #include <utils/parallel.h>
 #include <utils/log.h>
 #include <utils/tlock.h>
-#include <utils/list.h>
 #include <sys/sysinfo.h>
 #include <stdint.h>
 #include <pthread.h>
@@ -65,19 +64,21 @@ err:
  */
 int parallel(void *(*func)(void *data), void *data)
 {
+#ifdef NO_THREADING
+    func(data);
+    return PARALLEL_OK;
+#else 
     int ret = PARALLEL_OK;
     int i;
-    List threads;
-    LOpts opts;
+    int max;
+    pthread_t *threads;
 
     if (!__parallel_data.initialized) {
         return PARALLEL_NOT_INIT;
     }
 
-    memset(&opts, 0, sizeof(opts));
-    opts.datasize = sizeof(pthread_t);
-
-    if (L_INIT(&threads, LIST_TYPE_DLINKED, &opts)) {
+    threads = malloc(__parallel_data.cpus * sizeof(pthread_t));
+    if (!threads) {
         goto err;
     }
 
@@ -86,38 +87,18 @@ int parallel(void *(*func)(void *data), void *data)
         pthread_t *t;
 
         for (i = 0; i < __parallel_data.cpus; ++i) {
-            t = L_NEWELEMENT(&threads);
-
-            if (!t) {
-                // We leave the loop, to clean up the rest, but set an error state
-                // to inform the caller
-                ret = PARALLEL_ERR;
-                break;
-            }
-
-            if (pthread_create(t, NULL, func, data)) {
+            if (pthread_create(&(threads[i]), NULL, func, data)) {
                 ret = PARALLEL_THREAD_CREATE;
                 break;
             }
         }
 
+        max = i;
         int tmp_ret = PARALLEL_OK;
-        while (L_SIZE(&threads)) {
-            pthread_t *t_for_join = L_LAST(&threads);
-
-            // if we had an error before and t_for_join has the
-            // same address as thread t, than this thread can't be
-            // joined.
-            if (PARALLEL_OK != ret && t == t_for_join) {
-                L_POPBACK(&threads, NULL);
-                continue;
-            }
-
-            if (pthread_join(*t_for_join, NULL)) {
+        for (i = 0; i < max; i++) {
+            if (pthread_join(threads[i], NULL)) {
                tmp_ret = PARALLEL_ERR;
             }
-
-            L_POPBACK(&threads, NULL);
         }
 
         if (PARALLEL_OK == ret && PARALLEL_OK != tmp_ret) {
@@ -131,12 +112,11 @@ int parallel(void *(*func)(void *data), void *data)
         func(data);
     }
 
-    if (L_DESTROY(&threads)) {
-        WARN("Destroying of thread list failed. Is the memory corrupt?");
-    }
+    free(threads);
 
     return ret;
 err:
     return PARALLEL_ERR;
+#endif
 }
 
