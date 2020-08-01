@@ -120,3 +120,107 @@ err:
 #endif
 }
 
+
+/*
+ * _parallel_hobs_struct()
+ */
+struct _parallel_jobs_struct {
+    TLock getMutex;
+    TLock collectMutex;
+    void *(*get)(void *previous_job, void *data);
+    void (*execute)(void *job, void *data);
+    void (*collect)(void *job, void *data);
+    void *data;
+};
+
+
+/*
+ * _parallel_jobs_helper()
+ */
+void *_parallel_jobs_helper(void *_data) 
+{
+    void *job = NULL;
+    struct _parallel_jobs_struct *data = _data;
+
+    while (1) {
+        if (tl_lock(&data->getMutex)) {
+            WARN("Could not aquire mutex for get method.");
+        }
+
+        job = data->get(job, data->data);
+
+        if (tl_unlock(&data->getMutex)) {
+            WARN("Could not release mutex for get method.");
+        }
+
+        if (!job) {
+            break;
+        }
+
+        data->execute(job, data->data);
+
+        if (data->collect) {
+            if (tl_lock(&data->collectMutex)) {
+                WARN("Could not aquire mutex for collect method.");
+            }
+
+            data->collect(job, data->data);
+
+            if (tl_unlock(&data->collectMutex)) {
+                WARN("Could not release mutex for collect method.");
+            }
+        }
+    }
+}
+
+
+/*
+ * parallel_jobs()
+ */
+int parallel_jobs(void *(*get)(void *previous_job, void *data),
+                  void (*execute)(void *job, void *data),
+                  void (*collect)(void *job, void *data),
+                  void *data)
+{
+    int ret = PARALLEL_OK;
+    struct _parallel_jobs_struct job_data;
+
+    job_data.get = get;
+    job_data.execute = execute;
+    job_data.collect = collect;
+    job_data.data = data;
+
+    if (!get || !execute) {
+        goto err;
+    }
+
+    if (tl_init(&job_data.getMutex, 0)) {
+        goto err;
+    }
+
+    if (job_data.collect) {
+        if (tl_init(&job_data.collectMutex, 0)) {
+            goto err_getMutex;
+        }
+    }
+
+
+    ret = parallel(_parallel_jobs_helper, &job_data);
+
+    if (job_data.collect) {
+        if (tl_destroy(&job_data.collectMutex)) {
+            goto err_getMutex;
+        }
+    }
+
+    if (tl_destroy(&job_data.getMutex)) {
+        goto err;
+    }
+
+    return ret;
+err_getMutex:
+    tl_destroy(&job_data.getMutex);
+err:
+    return PARALLEL_ERR;
+}
+
