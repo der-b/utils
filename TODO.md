@@ -1,4 +1,4 @@
 - Add Documentation to List Macros
-- Add Parallel (started)
 - parallel: Add initiated cookie and don't use a bool.
 - Add UnitTest for macro \_LIST\_OPITMIZE
+- Add L\_MAP, L\_FILTER and L\_REDUCE to list macros using parallel\_jobs()
