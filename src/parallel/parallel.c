@@ -5,9 +5,13 @@
 #include <stdint.h>
 #include <pthread.h>
 
+#define _PARALLEL_INIT_COOKIE (0xa110ca7e)
+
 struct {
     TLock recursive;
-    uint8_t initialized;
+    // This initialized variable works, since it is guaranteed, that
+    // global variables are initialized with zero on program start.
+    uint32_t initialized;
     int cpus;
 } __parallel_data;
 
@@ -17,14 +21,13 @@ struct {
  */
 int parallel_init()
 {
-    if (__parallel_data.initialized) {
+    if (_PARALLEL_INIT_COOKIE == __parallel_data.initialized) {
         return PARALLEL_ALREADY_INIT;
     }
-    __parallel_data.initialized = 1;
+    __parallel_data.initialized = _PARALLEL_INIT_COOKIE;
 
+    // get the number of cpu cores available
     __parallel_data.cpus = get_nprocs();
-
-    INFO("Found %d hardware threads.", __parallel_data.cpus);
 
     if (tl_init(&__parallel_data.recursive, 0)) {
         goto err;
@@ -42,7 +45,7 @@ err:
  */
 int parallel_clean()
 {
-    if (!__parallel_data.initialized) {
+    if (_PARALLEL_INIT_COOKIE != __parallel_data.initialized) {
         return PARALLEL_NOT_INIT;
     }
     __parallel_data.initialized = 0;
@@ -73,7 +76,7 @@ int parallel(void *(*func)(void *data), void *data)
     int max;
     pthread_t *threads;
 
-    if (!__parallel_data.initialized) {
+    if (_PARALLEL_INIT_COOKIE != __parallel_data.initialized) {
         return PARALLEL_NOT_INIT;
     }
 
@@ -185,6 +188,10 @@ int parallel_jobs(void *(*get)(void *previous_job, void *data),
     int ret = PARALLEL_OK;
     struct _parallel_jobs_struct job_data;
 
+    if (_PARALLEL_INIT_COOKIE != __parallel_data.initialized) {
+        return PARALLEL_NOT_INIT;
+    }
+
     job_data.get = get;
     job_data.execute = execute;
     job_data.collect = collect;
@@ -203,7 +210,6 @@ int parallel_jobs(void *(*get)(void *previous_job, void *data),
             goto err_getMutex;
         }
     }
-
 
     ret = parallel(_parallel_jobs_helper, &job_data);
 
