@@ -15,7 +15,8 @@
 #ifndef __bitswap_h__
 #define __bitswap_h__
 
-#include <bits/byteswap.h>
+#include <byteswap.h>
+#include <arpa/init.h>
 
 #define ntoh16(x)	ntohs(x)
 #define hton16(x)	htons(x)
