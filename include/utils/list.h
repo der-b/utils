@@ -217,17 +217,45 @@ struct list {
 #define L_SIZE(_list) (((_list) && (_list)->size) ? ((_list)->size(_list)) : (LIST_ERR))
 
 /**
- * Addes a new element to the list, which is not initialized and returns a pointer to 
+ * Adds a new element to the list, which is not initialized and returns a pointer to 
  * element.
  *
- * It is implementation dependend at which position the new element is inserted.
+ * It is implementation dependent at which position the new element is inserted.
  *
  * @return Pointer to a new not initialized element on success, otherwise NULL.
  */
 #define L_NEWELEMENT(_list) (((_list) && (_list)->newelement) ? ((_list)->newelement(_list)) : (NULL))
 
+/**
+ * Insert a new element _data at position _pos in the list.
+ *
+ * @param _list Pointer to the list.
+ * @param _pos  Position at which the new element shall be inserted.
+ * @param _data Pointer to the new element.
+ * @return Returns LIST_OK on success.
+ */
 #define L_INSERT(_list, _pos, _data) (((_list) && (_list)->insert) ? ((_list)->insert((_list), (_pos), (_data))) : (NULL))
+
+/**
+ * Removes the element at position _pos.
+ * If _data is not a null pointer, the element is copied to this memory location.
+ *
+ * @param _list Pointer to the list.
+ * @param _pos  Position of the element which shall be removed.
+ * @param _data Pointer to a memory location to which the element shall be copied. If NULL, than the element is deleted, but not copied.
+ * @return Returns LIST_OK on success.
+ */
 #define L_REMOVE(_list, _pos, _data) (((_list) && (_list)->remove) ? ((_list)->remove((_list), (_pos), (_data))) : (LIST_ERR))
+
+/**
+ * Returns a pointer to the element at position _pos,
+ * Depending on the list type, the returned pointe might be invalidated by inserting or 
+ * removing other elements to the list.
+ *
+ * @param _list Pointer to the list.
+ * @param _pos  Position of the element to which the pointer is requested. 
+ * @returns Pointer to the element at position _pos. Returns NULL on error.
+ */
 #define L_GET(_list, _pos)			 (((_list) && (_list)->get) ? ((_list)->get((_list), (_pos))) : (NULL))
 
 #define L_LAST(_list)                (((_list) && (_list)->last) ? ((_list)->last((_list))) : (NULL))
