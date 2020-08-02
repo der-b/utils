@@ -68,38 +68,38 @@ typedef struct urlparser URLParser;
 typedef struct urlparser_result URLParserRes;
 
 struct urlparser {
-	regex_t preg;
+    regex_t preg;
 };
 
 struct urlparser_result {
-	int32_t res;
-        /* if the pharsed url is a absolute path, then 0 otherwise unequal 0 */
-	int8_t isAbsoluteURI;
-        /* length of the recognized url */
-        size_t length;
+    int32_t res;
+    /* if the parsed URL is an absolute path, then 1 otherwise unequal 1 */
+    int8_t isAbsoluteURI;
+    /* length of the recognized URL */
+    size_t length;
 
-	struct {
-		ssize_t start;
-		ssize_t end;
-	} scheme;
+    struct {
+        ssize_t start;
+        ssize_t end;
+    } scheme;
 
-	struct {
-		ssize_t start;
-		ssize_t end;
-                /* if the pharsed host is a IP than 1.
-                 * if the pharsed host was a hostname than unequal 0. */
-                int8_t isIP;
-	} host;
+    struct {
+        ssize_t start;
+        ssize_t end;
+        /* if the parsed host is a IP than 1.
+         * if the parsed host was a hostname than unequal 0. */
+        int8_t isIP;
+    } host;
 
-	struct {
-		ssize_t start;
-		ssize_t end;
-	} port;
+    struct {
+        ssize_t start;
+        ssize_t end;
+    } port;
 
-	struct {
-		ssize_t start;
-		ssize_t end;
-	} path;
+    struct {
+        ssize_t start;
+        ssize_t end;
+    } path;
 };
 
 int32_t urlparser_init(URLParser * urlp);
