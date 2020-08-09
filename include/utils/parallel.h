@@ -1,3 +1,12 @@
+/**
+ * @file
+ * The parallel\* functions are an abstraction layer for the parallel 
+ * execution of program code. They automatically determine number of CPUs and
+ * spawn threads accordingly as parallel().
+ *
+ * The function parallel_jobs() also handles some memory protection to avoid
+ * race conditions.
+ */
 #ifndef __PARALLEL_H__
 #define __PARALLEL_H__
 
@@ -41,7 +50,7 @@ int parallel_clean();
 int parallel(void *(*func)(void *data), void *data);
 
 /**
- * This function creates as many threads as cpu cores are available and
+ * @brief This function creates as many threads as cpu cores are available and
  * each thread executes the three provided functions.
  *
  * The concept is, that the 'get' function provides pointer to a job,
